@@ -24,7 +24,7 @@ export interface JishoResponse {
 export async function fetchJisho(word: string): Promise<JishoResponse> {
     const url = 'https://jisho.org/api/v1/search/words?keyword=' + encodeURIComponent(word);
     const res = await fetch(url, {
-        headers: { 'User-Agent': 'jishomcp/1.0 (personal MCP server)' }
+        headers: { 'User-Agent': 'nhgo/1.0 (personal MCP server)' }
     });
 
     if (!res.ok) {
