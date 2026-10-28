@@ -18,7 +18,7 @@ export function buildServer() {
                 kanji: z.string().min(1).max(5).describe("One or multiple kanji as input for the breakdown.")
             }
         },
-        async ({ kanji }) => text(getBreakdownPrompt(kanji))
+        async ({ kanji }) => text(await getBreakdownPrompt(kanji))
     );
 
     return server;
