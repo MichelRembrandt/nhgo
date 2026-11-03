@@ -1,11 +1,11 @@
 {
   "name": "nhgo",
   "version": "1.0.0",
-  "description": "MCP server that provides a prompt for breaking down the meaning and origin of kanji",
+  "description": "MCP server for studying Japanese: kanji breakdown prompts, Jisho lookups and Anki flashcards",
   "main": "build/index.js",
   "scripts": {
     "build": "tsc",
-    "start:http": "tsx src/http.ts"
+    "http": "tsx src/http.ts"
   },
   "keywords": [],
   "author": "",
