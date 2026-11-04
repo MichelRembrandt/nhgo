@@ -2,6 +2,7 @@ import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { z } from 'zod';
 import { getBreakdownPrompt } from './modules/breakdown.js';
 import { fetchJisho } from './modules/jisho.js';
+import { fetchKanjiByJlpt } from './modules/kanjiapi.js';
 import { addCard } from './modules/anki.js';
 import { lookupKanjiByRadicals, lookupRadicals } from './modules/radical.js';
 
@@ -84,6 +85,22 @@ export function buildServer() {
         async ({ radical }) => text(
             await lookupKanjiByRadicals(radical) || 'No kanji found for the given radical.'
         )
+    );
+
+    server.registerTool(
+        'jlpt',
+        {
+            title: 'List kanji by JLPT level',
+            description: 'List all kanji for a JLPT level (N5 to N1) using kanjiapi.dev',
+            inputSchema: {
+                level: z.number().int().min(1).max(5)
+                    .describe('JLPT level as an integer from 1 (N1, hardest) to 5 (N5, easiest)')
+            },
+            annotations: {
+                readOnlyHint: true
+            }
+        },
+        async ({ level }) => text((await fetchKanjiByJlpt(level)).join(''))
     );
 
     server.registerTool(
