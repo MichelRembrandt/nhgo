@@ -4,7 +4,7 @@
   "description": "MCP server for studying Japanese: kanji breakdown prompts, Jisho lookups and Anki flashcards",
   "main": "build/index.js",
   "scripts": {
-    "build": "tsc && cp src/modules/kradfile.txt src/modules/radkfile.txt build/modules/",
+    "build": "tsc",
     "http": "tsx src/http.ts"
   },
   "keywords": [],

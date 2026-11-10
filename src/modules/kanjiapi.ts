@@ -14,27 +14,10 @@ export function fetchKanjiByJlpt(level: number): Promise<string[]> {
     return get(`kanji/jlpt-${level}`);
 }
 
-export async function lookupKanjiLines(text: string): Promise<string[]> {
+export async function getKanjiInfo(text: string): Promise<string[]> {
     const chars = [...new Set(text.match(/\p{Script=Han}/gu) ?? [])];
     const results = await Promise.allSettled(
-        chars.map(async c => formatKanji(await get<KanjiInfo>(`kanji/${encodeURIComponent(c)}`)))
+        chars.map(async c => JSON.stringify(await get(`kanji/${encodeURIComponent(c)}`)))
     );
     return results.flatMap(r => r.status === 'fulfilled' ? [r.value] : []);
-}
-
-function formatKanji(info: KanjiInfo): string {
-    const readings = [...info.on_readings, ...info.kun_readings].join('、') || '-';
-    return `${info.kanji}: readings: ${readings}; ` +
-        `JLPT: ${info.jlpt ? 'N' + info.jlpt : '-'}; ` +
-        `grade: ${info.grade ?? '-'}; ` +
-        `meaning: ${info.meanings.join(', ') || '-'}`;
-}
-
-interface KanjiInfo {
-    kanji: string;
-    grade: number | null;
-    jlpt: number | null;
-    meanings: string[];
-    on_readings: string[];
-    kun_readings: string[];
 }
