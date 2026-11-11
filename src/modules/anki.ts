@@ -7,6 +7,8 @@ export interface CardInput {
     emoji: string;
     reading: string;
     translation: string;
+    sentence?: string;
+    sentenceTranslation?: string;
 }
 
 async function invoke<T = unknown>(action: string, params: Record<string, unknown> = {}): Promise<T> {
@@ -22,18 +24,24 @@ async function invoke<T = unknown>(action: string, params: Record<string, unknow
     return result;
 }
 
-export async function addCard({ deck, japanese, emoji, reading, translation }: CardInput): Promise<number> {
+export async function addCard(
+    { deck, japanese, emoji, reading, translation, sentence, sentenceTranslation }: CardInput
+): Promise<number> {
     await invoke("createDeck", { deck });
+    const front = sentence ? `${japanese}<br><br>${sentence}` : japanese;
+    const back = [emoji, reading, translation, sentenceTranslation && `<br>${sentenceTranslation}`]
+        .filter(Boolean)
+        .join("<br>");
     return invoke<number>("addNote", {
         note: {
             deckName: deck,
             modelName: "Basic",
             fields: {
-                Front: japanese,
-                Back: `${emoji}<br>${reading}<br>${translation}`,
+                Front: front,
+                Back: back,
             },
             tags: ["ankimcp"],
-            options: { allowDuplicate: false, duplicateScope: "deck" },
+            options: { allowDuplicate: true, duplicateScope: "deck" },
         },
     });
 }

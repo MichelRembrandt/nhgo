@@ -28,37 +28,37 @@ export function buildServer() {
         async ({ word }) => text(JSON.stringify(await fetchJisho(word)))
     );
 
-    server.registerTool(
-        'kanji_by_jlpt',
-        {
-            title: 'List kanji by JLPT level',
-            description: 'List all kanji for a JLPT level (N5 to N1) using kanjiapi.dev',
-            inputSchema: {
-                level: z.number().int().min(1).max(5)
-                    .describe('JLPT level as an integer from 1 (N1, hardest) to 5 (N5, easiest)')
-            },
-            annotations: {
-                readOnlyHint: true
-            }
-        },
-        async ({ level }) => text((await fetchKanjiByJlpt(level)).join(''))
-    );
+    // server.registerTool(
+    //     'kanji_by_jlpt',
+    //     {
+    //         title: 'List kanji by JLPT level',
+    //         description: 'List all kanji for a JLPT level (N5 to N1) using kanjiapi.dev',
+    //         inputSchema: {
+    //             level: z.number().int().min(1).max(5)
+    //                 .describe('JLPT level as an integer from 1 (N1, hardest) to 5 (N5, easiest)')
+    //         },
+    //         annotations: {
+    //             readOnlyHint: true
+    //         }
+    //     },
+    //     async ({ level }) => text((await fetchKanjiByJlpt(level)).join(''))
+    // );
 
-    server.registerTool(
-        'kanji_info',
-        {
-            title: 'Get kanji info',
-            description: 'Get readings, JLPT level, grade and meanings for every kanji in a text using kanjiapi.dev',
-            inputSchema: {
-                text: z.string().min(1).max(50)
-                    .describe('Japanese text; info is returned for each distinct kanji it contains')
-            },
-            annotations: {
-                readOnlyHint: true
-            }
-        },
-        async ({ text: input }) => text((await getKanjiInfo(input)).join('\n'))
-    );
+    // server.registerTool(
+    //     'kanji_info',
+    //     {
+    //         title: 'Get kanji info',
+    //         description: 'Get readings, JLPT level, grade and meanings for every kanji in a text using kanjiapi.dev',
+    //         inputSchema: {
+    //             text: z.string().min(1).max(50)
+    //                 .describe('Japanese text; info is returned for each distinct kanji it contains')
+    //         },
+    //         annotations: {
+    //             readOnlyHint: true
+    //         }
+    //     },
+    //     async ({ text: input }) => text((await getKanjiInfo(input)).join('\n'))
+    // );
 
     server.registerTool(
         'add_to_anki',
@@ -70,17 +70,24 @@ export function buildServer() {
                     .describe('Title of the deck the card will be added to'),
                 japanese: z.string().min(1).max(20)
                     .describe('Japanese word or phrase that will be studied - in kanji, hiragana or katakana'),
-                emoji: z.string().min(1).max(5)
-                    .describe('(Combination of) emoji(s) representing the Japanese word'),
+                emoji: z.string().min(1).max(5).describe('(Combination of) emoji(s) representing the Japanese word'),
                 reading: z.string().min(1).max(20).describe(
                     'Reading of the word or phrase in hiragana. ' +
                     'Alternatively this can contain the kanji writing of a word ' +
-                    'that is usually written in hiragana'
+                    'that is usually written in hiragana' +
+                    'If a sentence is provided, the reading should be the correct reading in the context of the sentence.'
                 ),
                 translation: z.string().min(1).max(120).describe(
                     'English translation of the word or phrase. ' +
-                    'Limit to the most straight forward translation(s) ' +
-                    'to ensure simplicity while studying the word'
+                    'If there are synonyms, limit to one or two of the most straight forward translation(s).' +
+                    'If a sentence is provided, the translation should be the correct translation in the context of the sentence.'
+                ),
+                sentence: z.string().min(1).max(200).optional().describe(
+                    'Optional Japanese sentence giving the context in which the word was encountered. ' +
+                    'Shown on the front of the card together with the word'
+                ),
+                sentenceTranslation: z.string().min(1).max(300).optional().describe(
+                    'Include if a sentence was provided. Shown on the back of the card'
                 )
             }
         },
