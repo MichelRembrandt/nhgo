@@ -72,16 +72,16 @@ Start the HTTP server (no build needed, it uses `tsx`):
 npm run http
 ```
 
-It listens on `http://127.0.0.1:3000/nhgo` (localhost only). Set `PORT` to change the port:
+It listens on `http://127.0.0.1:3000/mcp` (localhost only). Set `PORT` to change the port:
 
 ```sh
 PORT=8080 npm run http
 ```
 
-The server is stateless: each `POST /nhgo` request gets its own server and transport instance. Connect a client to it, for example:
+The server is stateless: each `POST /mcp` request gets its own server and transport instance. Connect a client to it, for example:
 
 ```sh
-claude mcp add --transport http nhgo http://127.0.0.1:3000/nhgo
+claude mcp add --transport http nhgo http://127.0.0.1:3000/mcp
 ```
 
 ### MCP Inspector

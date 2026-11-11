@@ -5,7 +5,7 @@ import { buildServer } from './server.js';
 const app = express();
 app.use(express.json());
 
-app.post("/nhgo", async (req, res) => {
+app.post("/mcp", async (req, res) => {
     const server = buildServer();
     const transport = new StreamableHTTPServerTransport({
         sessionIdGenerator: undefined
@@ -20,5 +20,5 @@ app.post("/nhgo", async (req, res) => {
 
 const port = Number(process.env.PORT ?? 3000);
 app.listen(port, "127.0.0.1", () =>
-    console.error(`MCP listening on http://127.0.0.1:${port}/nhgo`)
+    console.error(`MCP listening on http://127.0.0.1:${port}/mcp`)
 );
